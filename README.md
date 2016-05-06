@@ -12,6 +12,11 @@ This is a Unity project.
 
 Clone this repo and use the "Open project" button in Unity on the root folder.
 
+## WIP
+6th of May 2016
+
+<img src="http://i.imgur.com/UKkVWSU.gif"/>
+
 ## License
 
 Attribution-NonCommercial 2.0 Generic (CC BY-NC 2.0)

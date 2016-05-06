@@ -19,6 +19,6 @@ Clone this repo and use the "Open project" button in Unity on the root folder.
 
 ## License
 
-Attribution-NonCommercial 2.0 Generic (CC BY-NC 2.0)
+Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
 
 <img src="http://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-nc.png" height="64"/>

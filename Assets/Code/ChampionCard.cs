@@ -16,5 +16,5 @@ public class ChampionCard : Card {
         meshRenderer.material.mainTexture = image;
     }
 
-    private readonly Vector3 smallSize = new Vector3(64, 64, 1);
+    private readonly Vector3 smallSize = new Vector3(0.4f, 0.4f, 1);
 }

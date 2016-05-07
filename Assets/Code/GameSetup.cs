@@ -23,6 +23,7 @@ public class GameSetup : MonoBehaviour {
         championRestUrl = string.Format(Constants.championRestUrl, Constants.region, Constants.apiKey);
         versionsRestUrl = string.Format(Constants.versionsRestUrl, Constants.region, Constants.apiKey);
 
+        Debug.Log("requesting " + versionsRestUrl);
         WWW www = new WWW(versionsRestUrl);
         yield return www;
         string[] versions = JsonHelper.getJsonArray<string>(www.text);
@@ -34,6 +35,7 @@ public class GameSetup : MonoBehaviour {
 
     private IEnumerator SetupMap()
     {
+        Debug.Log("requesting " + mapImageUrl);
         WWW www = new WWW(mapImageUrl);
         yield return www;
         Renderer mapRenderer = map.GetComponent<Renderer>();
@@ -42,12 +44,13 @@ public class GameSetup : MonoBehaviour {
 
     private IEnumerator SetupChampions()
     {
+        Debug.Log("requesting " + championRestUrl);
         WWW www = new WWW(championRestUrl);
         yield return www;
-        ChampionListDto champions = JsonUtility.FromJson<ChampionListDto>(www.text);
+        //ChampionListDto champions = JsonUtility.FromJson<ChampionListDto>(www.text);
         var N = SimpleJSON.JSON.Parse(www.text);
 
-        champions = new ChampionListDto();
+        ChampionListDto champions = new ChampionListDto();
         champions.Type = N["type"];
         champions.Version = N["version"];
 

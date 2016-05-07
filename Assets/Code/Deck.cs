@@ -10,17 +10,29 @@ public class Deck : MonoBehaviour {
     {
         ChampionDto champion = GameWorld.Instance.Champions.Data[Random.Range(0,GameWorld.Instance.Champions.Data.Length)];
 
-        GameObject cardObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        GameObject cardObject = new GameObject();
         cardObject.name = champion.Name;
 
-        cardObject.GetComponent<Renderer>().material = new Material(Shader.Find("Unlit/Texture"));
+        GameObject cardArtObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        cardArtObject.name = "Card Mesh";
+
+        //a mesh collider is created by CreatePrimitive(). We don't need it
+        Destroy(cardArtObject.GetComponent<MeshCollider>());
+
+        cardArtObject.transform.SetParent(cardObject.transform, false);
+
+        cardArtObject.GetComponent<Renderer>().material = new Material(Shader.Find("Unlit/Texture"));
 
         ChampionCard card = cardObject.AddComponent<ChampionCard>();
+        card.cardMesh = cardArtObject;
         card.onPlayActionChain = championActionChain;
         card.cardName = champion.Name;
 
+        BoxCollider boxCollider = cardObject.AddComponent<BoxCollider>();
+        boxCollider.size = new Vector3(1, 1, 0.1f);
+
         Texture2D texture;
-        if(championMediumTextures.TryGetValue(champion.Id, out texture))
+        if (championMediumTextures.TryGetValue(champion.Id, out texture))
         {
             card.image = texture;
             card.thumb = championSmallTextures[champion.Id];

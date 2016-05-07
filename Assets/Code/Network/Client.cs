@@ -17,6 +17,9 @@ public class Client : MonoBehaviour {
 	
     void OnApplicationQuit()
     {
+        if (null == netClient)
+            return;
+
         if(netClient.ConnectionStatus == NetConnectionStatus.Connected)
             netClient.Disconnect("bye");
     }

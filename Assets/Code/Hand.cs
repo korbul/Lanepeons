@@ -36,8 +36,7 @@ public class Hand : MonoBehaviour {
         cardsInHand.Add(newCard);
         newCard.Owner = side == PlayerSide.Friendly ? GameWorld.Instance.FriendlyPlayer : GameWorld.Instance.EnemyPlayer;
         newCard.transform.SetParent(transform, false);
-        newCard.transform.localScale = new Vector3(154, 280, 1);
-        newCard.transform.localPosition = new Vector3(1000, 0, 0);
+        newCard.transform.localPosition = new Vector3(20, 0, 0);
 
         UpdateCardsPosition();
     }
@@ -46,7 +45,7 @@ public class Hand : MonoBehaviour {
     {
         for (int i = 0; i < cardsInHand.Count; i++)
         {
-            cardsInHand[i].transform.DOMove(transform.position + new Vector3(i * 100 * (int)directionLayout, 0, -i), 0.25f);
+            cardsInHand[i].transform.DOMove(transform.position + new Vector3(i * 0.4f * (int)directionLayout, 0, -i * 0.01f), 0.25f);
         }
     }
 
@@ -58,6 +57,7 @@ public class Hand : MonoBehaviour {
 
     private void OnCardPlayComplete()
     {
+        potentialCard.OnHoverExit();
         cardsInHand.Remove(potentialCard);
         potentialCard = null;
         UpdateCardsPosition();

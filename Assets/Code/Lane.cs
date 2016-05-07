@@ -65,7 +65,7 @@ public class Lane : Target {
 
         for (int i = 0; i < cards[(int)side].Count; i++)
         {
-            cards[(int)side][i].transform.DOMove(transform.position + dir * (i + 1) * 64, 1);
+            cards[(int)side][i].transform.DOMove(transform.position + dir * (i + 1) * 0.4f, 1);
         }
     }
 

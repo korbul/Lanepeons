@@ -3,6 +3,7 @@ using DG.Tweening;
 
 public class Card : MonoBehaviour {
 
+    public GameObject cardMesh;
     public Texture2D image;
     
     public string cardName;
@@ -41,26 +42,26 @@ public class Card : MonoBehaviour {
 
     public void OnHoverEnter()
     {
-        preHoverZ = transform.position.z;
-        transform.DOScale(cardSize * 1.1f, 0.5f);
-        transform.DOMoveZ(-20, 0);
+        cardMesh.transform.DOScale(Vector3.one * 1.75f, 0.25f);
+        cardMesh.transform.DOLocalMove(hoverOffset, 0.25f);
     }
 
     public void OnHoverExit()
     {
-        transform.DOScale(cardSize, 0.5f);
-        transform.DOMoveZ(preHoverZ, 0);
+        cardMesh.transform.DOScale(Vector3.one, 0.25f);
+        cardMesh.transform.DOLocalMove(Vector3.zero, 0.25f);
     }
 
-    protected readonly Vector3 cardSize = new Vector3(154, 280, 1);
+    protected readonly Vector3 cardSize = new Vector3(0.5f, 0.91f, 1.0f);
+    protected readonly Vector3 hoverOffset = new Vector3(0.4f, 0.75f, -0.1f);
     protected MeshRenderer meshRenderer;
     protected bool cardPlayed = false;
 
-    private float preHoverZ;
-
     void Start()
     {
-        meshRenderer = GetComponent<MeshRenderer>();
+        transform.localScale = cardSize;
+
+        meshRenderer = cardMesh.GetComponent<MeshRenderer>();
         meshRenderer.material.mainTexture = image;
 
         if (null != onPlayActionChain)

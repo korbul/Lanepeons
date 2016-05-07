@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using DG.Tweening;
 
 public class Lane : Target {
+    public LaneHexagon laneHexagon;
+
     public override TargetType GetTargetType()
     {
         return TargetType.LANE;
@@ -40,7 +42,14 @@ public class Lane : Target {
 
         UpdateCardPositions(side);
 
-        UpdateLaneScore();
+        UpdateLanePower();
+
+        if(battleTurn <= 0)
+        {
+            //battle
+            battleTurn = turnsToBattle;
+            Battle();
+        }
     }
 
     public int CardsCount(PlayerSide side)
@@ -51,10 +60,66 @@ public class Lane : Target {
     private MeshRenderer meshRenderer;
     private Color highlightColor;
     private List<Card>[] cards;
+    private int[] powerLevel;
+    private int battleTurn = turnsToBattle;
+    private const int turnsToBattle = 4;
 
-    private void UpdateLaneScore()
+    private void Battle()
     {
-        //throw new NotImplementedException();
+        int friendly = (int)PlayerSide.Friendly, enemy = (int)PlayerSide.Enemy;
+        //compare power levels
+
+        //when equal, destroy one of each
+        if (powerLevel[friendly] == powerLevel[enemy])
+        {
+            Destroy(cards[friendly][0].gameObject);
+            cards[friendly].RemoveAt(0);
+
+            Destroy(cards[enemy][0].gameObject);
+            cards[enemy].RemoveAt(0);
+        }
+
+        //when not equal, destroy on for each unit difference
+        if(powerLevel[friendly] > powerLevel[enemy])
+        {
+            DestroyCards(friendly, enemy);
+        }
+        else
+        {
+            DestroyCards(enemy, friendly);
+        }
+
+        UpdateCardPositions(PlayerSide.Friendly);
+        UpdateCardPositions(PlayerSide.Enemy);
+    }
+
+    private void DestroyCards(int winner, int looser)
+    {
+        int cardsToDestroy = Mathf.CeilToInt(powerLevel[winner] - powerLevel[looser]);
+        cardsToDestroy = Mathf.Clamp(cardsToDestroy, 0, cards[looser].Count);
+        for (int i = 0; i < cardsToDestroy; i++)
+        {
+            Destroy(cards[looser][0].gameObject);
+            cards[looser].RemoveAt(0);
+        }
+    }
+
+    private void UpdateLanePower()
+    {
+        //temporary
+        powerLevel[(int)PlayerSide.Friendly] = cards[(int)PlayerSide.Friendly].Count;
+        powerLevel[(int)PlayerSide.Enemy] = cards[(int)PlayerSide.Enemy].Count;
+
+        laneHexagon.UpdatePowerSlider(powerLevel[(int)PlayerSide.Friendly], powerLevel[(int)PlayerSide.Enemy]);
+        battleTurn--;
+        if (battleTurn <= 0)
+        {
+            laneHexagon.ResetTurn();
+        }
+        else
+        {
+            laneHexagon.SetTurn(battleTurn);
+        }
     }
 
     private void UpdateCardPositions(PlayerSide side)
@@ -74,6 +139,7 @@ public class Lane : Target {
         meshRenderer = GetComponent<MeshRenderer>();
         highlightColor = meshRenderer.material.color;
         cards = new List<Card>[(int)PlayerSide.Count];
+        powerLevel = new int[(int)PlayerSide.Count];
         for (int i = 0; i < cards.Length; i++)
         {
             cards[i] = new List<Card>();

@@ -6,9 +6,21 @@ public class Deck : MonoBehaviour {
 
     public ActionChain championActionChain;
 
-    public Card GetRandomChampionCard()
+    public Card GetChampionCardById(int id)
     {
-        ChampionDto champion = GameWorld.Instance.Champions.Data[Random.Range(0,GameWorld.Instance.Champions.Data.Length)];
+        ChampionDto champion = null;
+
+        foreach(ChampionDto cdto in GameWorld.Instance.Champions.Data)
+        {
+            if(cdto.Id == id)
+            {
+                champion = cdto;
+                break;
+            }
+        }
+
+        if (null == champion)
+            return null;
 
         GameObject cardObject = new GameObject();
         cardObject.name = champion.Name;
@@ -24,6 +36,7 @@ public class Deck : MonoBehaviour {
         cardArtObject.GetComponent<Renderer>().material = new Material(Shader.Find("Unlit/Texture"));
 
         ChampionCard card = cardObject.AddComponent<ChampionCard>();
+        card.championData = champion;
         card.cardMesh = cardArtObject;
         card.onPlayActionChain = championActionChain;
         card.cardName = champion.Name;
@@ -54,7 +67,14 @@ public class Deck : MonoBehaviour {
             StartCoroutine(DownloadImage(string.Format(Constants.championSmallImageUrl, GameWorld.Instance.DragonDataVersion, champion.Key), texture));
         }
 
+        card.Init();
         return card;
+    }
+
+    public Card GetRandomChampionCard()
+    {
+        ChampionDto champion = GameWorld.Instance.Champions.Data[Random.Range(0,GameWorld.Instance.Champions.Data.Length)];
+        return GetChampionCardById(champion.Id);
     }
 
     private Dictionary<int, Texture2D> championMediumTextures = new Dictionary<int, Texture2D>();

@@ -17,8 +17,24 @@ public class Hand : MonoBehaviour {
     public PlayerSide side;
     public HandDirectionLayout directionLayout;
 
+    public void PlayNetworkCard(string data)
+    {
+        NetworkAction action = JsonUtility.FromJson<NetworkAction>(data);
+
+        Card newCard = null;
+        if (action.cardChampionId != -1)
+            newCard = deck.GetChampionCardById(action.cardChampionId);
+        else
+            newCard = deck.GetRandomChampionCard();
+
+        newCard.Owner = side == PlayerSide.Friendly ? GameWorld.Instance.FriendlyPlayer : GameWorld.Instance.EnemyPlayer;
+        newCard.onPlayActionChain.InjectVariables(JsonUtility.FromJson<NetworkAction>(data).variables);
+        newCard.OnCardPlay(cardPresenter, null);
+    }
+
     private Card potentialCard;
     private List<Card> cardsInHand;
+
     private bool cardPlayInProgress = false;
 
     private IEnumerator DrawCards(int amount)
@@ -57,6 +73,8 @@ public class Hand : MonoBehaviour {
 
     private void OnCardPlayComplete()
     {
+        Card tempCard = potentialCard;
+
         potentialCard.OnHoverExit();
         cardsInHand.Remove(potentialCard);
         potentialCard = null;
@@ -64,6 +82,15 @@ public class Hand : MonoBehaviour {
         cardPlayInProgress = false;
 
         DrawCard();
+
+        //test remote card
+        NetworkAction list = new NetworkAction();
+        if (tempCard.GetType() == typeof(ChampionCard))
+            list.cardChampionId = ((ChampionCard)tempCard).championData.Id;
+        else
+            list.cardChampionId = -1;
+        list.variables = tempCard.onPlayActionChain.ExtractVariables();
+        SocketIOClient.Send(JsonUtility.ToJson(list));
     }
 
     #region UnityFunctions

@@ -7,10 +7,22 @@ public class GameplayState : MonoBehaviour {
     public AudioClip defeatAudio;
     public AudioClip victoryAudio;
     public AudioClip welcomeAudio;
+
     public AudioClip friendlyTurretDestroyAudio;
     public AudioClip enemyTurretDestroyAudio;
 
     public Hand playerHand;
+    public Hand enemyHand;
+
+    public void OnPlayerMove(string data)
+    {
+        enemyHand.PlayNetworkCard(data);
+    }
+
+    public void OnGameStart(string data)
+    {
+        playerHand.enabled = true;
+    }
 
     public void TurretDestroyed(int side)
     {

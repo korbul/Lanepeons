@@ -64,9 +64,16 @@ public class CardPresenterView : MonoBehaviour {
         }
         else if(action.Type == CardActionType.TARGET)
         {
-            //wait for target selection
-            HighlightTargets();
-            waitingForTarget = true;
+            if (!string.IsNullOrEmpty(currentAction.Target))
+            {
+                ActionComplete();
+            }
+            else
+            {
+                //wait for target selection
+                HighlightTargets();
+                waitingForTarget = true;
+            }
         }
     }
 
@@ -83,7 +90,7 @@ public class CardPresenterView : MonoBehaviour {
             {
                 if(null != PotentialTarget)
                 {
-                    currentAction.Target = PotentialTarget;
+                    currentAction.Target = PotentialTarget.name;
 
                     //done
                     ActionComplete();

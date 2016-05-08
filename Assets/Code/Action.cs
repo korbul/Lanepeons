@@ -53,16 +53,16 @@ public class Action {
         }
     }
 
-    public Target Target
+    public string Target
     {
         get
         {
-            return target;
+            return variables.target;
         }
 
         set
         {
-            target = value;
+            variables.target = value;
         }
     }
 
@@ -79,6 +79,19 @@ public class Action {
         }
     }
 
+    public RuntimeVariables Variables
+    {
+        get
+        {
+            return variables;
+        }
+
+        set
+        {
+            variables = value;
+        }
+    }
+
     [SerializeField]
     string instuctionMessage;
     [SerializeField]
@@ -88,7 +101,20 @@ public class Action {
     [SerializeField]
     List<string> behaviours;
 
-    //populated on runtime
-    Target target;
+    [HideInInspector]
+    RuntimeVariables variables;
     Card callerCard;
+}
+
+[Serializable]
+public struct RuntimeVariables
+{
+    public string target;
+}
+
+[Serializable]
+public class NetworkAction
+{
+    public int cardChampionId;
+    public List<RuntimeVariables> variables;
 }

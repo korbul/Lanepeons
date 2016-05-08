@@ -16,6 +16,8 @@ public class GameSetup : MonoBehaviour {
         yield return StartCoroutine(SetupMap());
         yield return StartCoroutine(SetupChampions());
         yield return StartCoroutine(SetupPlayers());
+
+        SocketIOClient.Connect();
     }
 
     private IEnumerator SetupApiData()

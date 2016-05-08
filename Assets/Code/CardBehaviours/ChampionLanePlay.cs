@@ -11,6 +11,8 @@ public class ChampionLanePlay : IBehaviour {
         //resize card
         card.Shrink();
 
-        ((Lane)Caller.Target).AddCard(card, card.Owner.Side);
+        Lane targetLane = GameWorld.Instance.Lanes.Find(x => x.name == Caller.Target);
+        if(null != targetLane)
+            targetLane.AddCard(card, card.Owner.Side);
     }
 }

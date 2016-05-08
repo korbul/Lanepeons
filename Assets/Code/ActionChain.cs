@@ -10,6 +10,31 @@ public class ActionChain : ScriptableObject {
     [System.NonSerialized]
     int currentActionIdx = 0;
 
+    public List<RuntimeVariables> ExtractVariables()
+    {
+        List<RuntimeVariables> list = new List<RuntimeVariables>();
+        foreach(Action action in actions)
+        {
+            list.Add(action.Variables);
+        }
+
+        return list;
+    }
+
+    public void InjectVariables(List<RuntimeVariables> list)
+    {
+        if(list.Count != actions.Count)
+        {
+            Debug.LogError("Injection failed, incorrect number of variables");
+            return;
+        }
+
+        for (int i = 0; i < actions.Count; i++)
+        {
+            actions[i].Variables = list[i];
+        }
+    }
+
     public bool GetNextAction(out Action action)
     {
         action = null;

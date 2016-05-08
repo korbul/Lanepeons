@@ -3,6 +3,7 @@ using DG.Tweening;
 
 public class ChampionCard : Card {
     public Texture2D thumb;
+    public ChampionDto championData;
 
     public void Shrink()
     {

@@ -15,11 +15,15 @@ Clone this repo and use the "Open project" button in Unity on the root folder.
 ## WIP
 6th of May 2016
 
-<img src="http://i.imgur.com/UKkVWSU.gif"/>
+<a href="http://i.imgur.com/UKkVWSU.gif">WIP 1</a>
 
 7th of May 2016 - added turret representation. Early lane battle and UI
 
 <img src="http://i.imgur.com/BZc8FeE.gif"/>
+
+8th of May 2016 - added websockets multiplayer, turret explosion
+
+<img src="http://i.imgur.com/b7Vn8cY.gif"/>
 
 ## License
 

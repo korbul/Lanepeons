@@ -5,7 +5,16 @@ using System.Collections.Generic;
 using DG.Tweening;
 
 public class Lane : Target {
+    [Serializable]
+    public class StrongpointContainer
+    {
+        public PlayerSide side;
+        public Strongpoint[] points;
+    }
+
+    public GameplayState gameplayState;
     public LaneHexagon laneHexagon;
+    public StrongpointContainer[] strongpoints;
 
     public override TargetType GetTargetType()
     {
@@ -78,19 +87,53 @@ public class Lane : Target {
             Destroy(cards[enemy][0].gameObject);
             cards[enemy].RemoveAt(0);
         }
-
-        //when not equal, destroy on for each unit difference
-        if(powerLevel[friendly] > powerLevel[enemy])
+        //when not equal, destroy one for each unit difference
+        else if (powerLevel[friendly] > powerLevel[enemy]) 
         {
+            DestroyStrongpoint(friendly, enemy);
             DestroyCards(friendly, enemy);
         }
         else
         {
+            DestroyStrongpoint(enemy, friendly);
             DestroyCards(enemy, friendly);
         }
 
         UpdateCardPositions(PlayerSide.Friendly);
         UpdateCardPositions(PlayerSide.Enemy);
+    }
+
+    private void DestroyStrongpoint(int winner, int looser)
+    {
+        int cardsToDestroy = Mathf.CeilToInt(powerLevel[winner] - powerLevel[looser]);
+        if (cardsToDestroy > cards[looser].Count)
+        {
+            bool found = false;
+            //destroy strongpoint
+            for (int i = 0; i < strongpoints.Length; i++)
+            {
+                if((int)strongpoints[i].side == looser)
+                {
+                    for (int j = 0; j < strongpoints[i].points.Length; j++)
+                    {
+                        if(strongpoints[i].points[j].enabled == true)
+                        {
+                            found = true;
+                            strongpoints[i].points[j].DestroyStrongpoint();
+                            gameplayState.TurretDestroyed(looser);
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+
+            if (found == false)
+            {
+                //end game, nexus destroyed
+                gameplayState.EndGame(winner);
+            }
+        }
     }
 
     private void DestroyCards(int winner, int looser)

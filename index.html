@@ -7,6 +7,49 @@
     <link rel="stylesheet" href="TemplateData/style.css">
     <link rel="shortcut icon" href="TemplateData/favicon.ico" />
     <script src="TemplateData/UnityProgress.js"></script>
+	<script src='socket.io/socket.io.js'></script>
+    <script>
+        var game = io("http://lanepeons-firewatch.rhcloud.com:8000/game", {query : 'username=Vasilica'});
+        var socket = io("http://lanepeons-firewatch.rhcloud.com:8000");
+
+        function registerGameCallback(eventName, callback)
+        {
+            if(eventName != null && eventName.length > 1)
+                game.on(eventName, callback);
+        }
+
+        function sendGameMessage(eventName, data)
+        {
+            if(eventName != null && eventName.length > 1)
+                game.emit(eventName, data);
+        }
+
+		registerGameCallback('game-start', function(data){
+			console.log(data);
+			SendMessage ('SocketIO', 'OnGameStart', String(data));
+		});
+		
+		registerGameCallback('player-move', function(data){
+			console.log(data);
+			console.log(String(data));
+			SendMessage ('SocketIO', 'OnPlayerMove', String(data));
+		});
+		
+		function sendData(data)
+		{
+			sendGameMessage('player-move', data);
+		}
+		
+		function connect()
+		{
+			sendGameMessage('player-join');
+		}
+		
+        game.on('debug', console.log.bind(console));
+        socket.on('error', console.error.bind(console));
+        socket.on('message', console.log.bind(console));
+        socket.on('debug', console.log.bind(console));
+    </script>
   </head>
   <body class="template">
     <p class="header"><span>Unity WebGL Player | </span>LanePeons</p>

@@ -1,6 +1,10 @@
 # Lanepeons
 
-A trading card game based on the Leage of Legends universe
+A trading card game based on the Leage of Legends universe.
+
+Lanepeons tries to emulate the usual League of Legends game, but from a trading card game's perspective. Instead of having 10 players (as a standard 5v5 match), Lanepeons is played by only two players, each one taking control of one of the two sides on the map.
+
+At the start of a game, each player draws 5 cards into his hand. Cards consist of League of Legends champions. On his turn, a player can only play one card, then the turn passes to his opponent. Champion cards can be played on one of the three lanes on the map. Each time a card is played on one of the lanes, the lane's battle turn decreases by one. At 0, a battle starts on the lane. The side with the greatest power on that lane wins, and also destroys the enemy champions and turret if the power difference is large enough. The ultimate goal is to destroy the opponents Nexus. The Nexus is destroyed when no turrets are left alive on a lane.
 
 ## Motivation
 

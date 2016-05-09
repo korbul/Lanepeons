@@ -6,6 +6,10 @@ Lanepeons tries to emulate the usual League of Legends game, but from a trading 
 
 At the start of a game, each player draws 5 cards into his hand. Cards consist of League of Legends champions. On his turn, a player can only play one card, then the turn passes to his opponent. Champion cards can be played on one of the three lanes on the map. Each time a card is played on one of the lanes, the lane's battle turn decreases by one. At 0, a battle starts on the lane. The side with the greatest power on that lane wins, and also destroys the enemy champions and turret if the power difference is large enough. The ultimate goal is to destroy the opponents Nexus. The Nexus is destroyed when no turrets are left alive on a lane.
 
+<p>You can play the WIP version here http://korbul.github.io/Lanepeons/
+<br/>
+Remember that this is a multiplayer game. You have to play with a friend, or open two tabs and play by yourself.</p>
+
 ## Motivation
 
 This project was born as a response to the <a href="https://developer.riotgames.com/discussion/announcements/show/eoq3tZd1">RIOT API Challenge 2016</a>

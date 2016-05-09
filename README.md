@@ -33,11 +33,17 @@ Clone this repo and use the "Open project" button in Unity on the root folder.
 
 7th of May 2016 - added turret representation. Early lane battle and UI
 
-<img src="http://i.imgur.com/BZc8FeE.gif"/>
+<a href="http://i.imgur.com/BZc8FeE.gif">WIP 2</a>
 
 8th of May 2016 - added websockets multiplayer, turret explosion
 
 <img src="http://i.imgur.com/b7Vn8cY.gif"/>
+
+9th of May 2016 - added intro flow, victory/defeat end states
+
+<img src="http://i.imgur.com/zBpwmAp.gif"/>
+<img src="http://i.imgur.com/5GaL355.gif"/>
+
 
 ## License
 

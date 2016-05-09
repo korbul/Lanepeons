@@ -10,6 +10,12 @@ At the start of a game, each player draws 5 cards into his hand. Cards consist o
 
 This project was born as a response to the <a href="https://developer.riotgames.com/discussion/announcements/show/eoq3tZd1">RIOT API Challenge 2016</a>
 
+The RIOT api exposes a plethora of data ranging from champion info to player and match info. A lot of other entries focus on formatting and displaying this data. This project aims to create a game out of it.
+
+Luckily enough, the champion data form the api contains information that is great to build rules upon. One example is the champion tags. This way the "Assasin" tag could become "+2 damage when facing only one enemy on lane". Considering this, champion cards quickly gain depth and usability in game. Along with data like champion image, name, etc. a champion can become a fully fledged card, and all of this in a dynamic way. There is no need to define any kind of data before the build. Everything comes from the api and is created at runtime.
+
+To make this available to as many people as possible, Unity game engine was used alongside the WebGL deployment option. This enables the game to run in a browser environment. Furthermore, the SocketIO library was used to enable realtime multiplayer straight in your browser. This repo is for the client side of the application. The server, written for node.js is quite simple and only acts as a relay between the players.
+
 ## Installation
 
 This is a Unity project.

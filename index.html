@@ -31,8 +31,12 @@
 		
 		registerGameCallback('player-move', function(data){
 			console.log(data);
-			console.log(String(data));
 			SendMessage ('SocketIO', 'OnPlayerMove', String(data));
+		});
+		
+		registerGameCallback('player-opponentDisconnected', function(data){
+			console.log(data);
+			SendMessage ('SocketIO', 'OnOpponentDisconnected', String(data));
 		});
 		
 		function sendData(data)

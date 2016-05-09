@@ -18,7 +18,7 @@ To make this available to as many people as possible, Unity game engine was used
 
 ## Installation
 
-This is a Unity project.
+This is a Unity 5.3.3f1 project.
 
 Clone this repo and use the "Open project" button in Unity on the root folder.
 

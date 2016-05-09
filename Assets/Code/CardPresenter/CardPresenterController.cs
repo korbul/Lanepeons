@@ -8,9 +8,20 @@ public class CardPresenterController : MonoBehaviour {
 
 	public void ExecuteActionChain(ActionChain actionChain, System.Action callback)
     {
-        this.callback = callback;
-        currentChain = actionChain;
-        ProcessNextAction();
+        if (actionChain.skipView)
+        {
+            Action action;
+            while (actionChain.GetNextAction(out action))
+            {
+                action.ExecuteBehaviours();
+            }
+        }
+        else
+        {
+            this.callback = callback;
+            currentChain = actionChain;
+            ProcessNextAction();
+        }
     }
 
     public void ActionComplete(Action completedAction)

@@ -10,6 +10,11 @@ public class ActionChain : ScriptableObject {
     [System.NonSerialized]
     int currentActionIdx = 0;
 
+    public bool skipView
+    {
+        get; private set;
+    }
+
     public List<RuntimeVariables> ExtractVariables()
     {
         List<RuntimeVariables> list = new List<RuntimeVariables>();
@@ -28,6 +33,8 @@ public class ActionChain : ScriptableObject {
             Debug.LogError("Injection failed, incorrect number of variables");
             return;
         }
+
+        skipView = true;
 
         for (int i = 0; i < actions.Count; i++)
         {

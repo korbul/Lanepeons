@@ -28,7 +28,7 @@ public class Hand : MonoBehaviour {
             newCard = deck.GetRandomChampionCard();
 
         newCard.Owner = side == PlayerSide.Friendly ? GameWorld.Instance.FriendlyPlayer : GameWorld.Instance.EnemyPlayer;
-        newCard.onPlayActionChain.InjectVariables(JsonUtility.FromJson<NetworkAction>(data).variables);
+        newCard.onPlayActionChain.InjectVariables(action.variables);
         newCard.OnCardPlay(cardPresenter, null);
     }
 

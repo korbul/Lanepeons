@@ -17,9 +17,16 @@ public class SocketIOClient : MonoBehaviour {
         Debug.Log(data);
     }
 
+    public void OnOpponentDisconnected(string data)
+    {
+        gameState.OnOpponentDisconnected(data);
+        Debug.Log(data);
+    }
+
     public static void Send(string data)
     {
         Application.ExternalCall("sendData", data);
+        Debug.Log(data);
     }
 
     public static void Connect()

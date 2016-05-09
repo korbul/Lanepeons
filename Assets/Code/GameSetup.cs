@@ -1,23 +1,38 @@
 using UnityEngine;
 using System.Collections;
-using System;
+using DG.Tweening;
+using UnityEngine.UI;
 
 public class GameSetup : MonoBehaviour {
 
     public GameObject map;
+    public Text statusText;
+    public Image loadingIndicator;
 
     private string championRestUrl;
     private string versionsRestUrl;
     private string mapImageUrl;
 
+    private bool error = false;
+
     // Use this for initialization
     IEnumerator Start () {
+        statusText.text = "Getting data from Riot api";
         yield return StartCoroutine(SetupApiData());
         yield return StartCoroutine(SetupMap());
         yield return StartCoroutine(SetupChampions());
         yield return StartCoroutine(SetupPlayers());
 
-        SocketIOClient.Connect();
+        if (error)
+        {
+            statusText.text = "An error has occurred during api requests.\nPlease try again later.";
+            DOTween.To(() => loadingIndicator.color, x => loadingIndicator.color = x, new Color(1, 1, 1, 0), 1);
+        }
+        else
+        {
+            statusText.text = "Finding random match";
+            SocketIOClient.Connect();
+        }
     }
 
     private IEnumerator SetupApiData()
@@ -28,11 +43,18 @@ public class GameSetup : MonoBehaviour {
         Debug.Log("requesting " + versionsRestUrl);
         WWW www = new WWW(versionsRestUrl);
         yield return www;
-        string[] versions = JsonHelper.getJsonArray<string>(www.text);
-        if (versions.Length > 0)
-            GameWorld.Instance.DragonDataVersion = versions[0];
+        if (www.error != null)
+        {
+            error = true;
+        }
+        else
+        {
+            string[] versions = JsonHelper.getJsonArray<string>(www.text);
+            if (versions.Length > 0)
+                GameWorld.Instance.DragonDataVersion = versions[0];
 
-        mapImageUrl = string.Format(Constants.mapImageUrl, GameWorld.Instance.DragonDataVersion);
+            mapImageUrl = string.Format(Constants.mapImageUrl, GameWorld.Instance.DragonDataVersion);
+        }
     }
 
     private IEnumerator SetupMap()
@@ -40,8 +62,15 @@ public class GameSetup : MonoBehaviour {
         Debug.Log("requesting " + mapImageUrl);
         WWW www = new WWW(mapImageUrl);
         yield return www;
-        Renderer mapRenderer = map.GetComponent<Renderer>();
-        mapRenderer.material.mainTexture = www.texture;
+        if (www.error != null)
+        {
+            error = true;
+        }
+        else
+        {
+            Renderer mapRenderer = map.GetComponent<Renderer>();
+            mapRenderer.material.mainTexture = www.texture;
+        }
     }
 
     private IEnumerator SetupChampions()
@@ -49,30 +78,37 @@ public class GameSetup : MonoBehaviour {
         Debug.Log("requesting " + championRestUrl);
         WWW www = new WWW(championRestUrl);
         yield return www;
-        //ChampionListDto champions = JsonUtility.FromJson<ChampionListDto>(www.text);
-        var N = SimpleJSON.JSON.Parse(www.text);
-
-        ChampionListDto champions = new ChampionListDto();
-        champions.Type = N["type"];
-        champions.Version = N["version"];
-
-        SimpleJSON.JSONNode data = N["data"];
-        champions.Data = new ChampionDto[data.Count];
-        for (int i = 0; i < data.Count; i++)
+        if (www.error != null)
         {
-            champions.Data[i] = new ChampionDto();
-            champions.Data[i].Id = data[i]["id"].AsInt;
-            champions.Data[i].Key = data[i]["key"];
-            champions.Data[i].Name = data[i]["name"];
-            champions.Data[i].Title = data[i]["title"];
-            champions.Data[i].Tags = new string[data[i]["tags"].Count];
-            for (int j = 0; j < data[i]["tags"].Count; j++)
-            {
-                champions.Data[i].Tags[j] = data[i]["tags"][j];
-            }
+            error = true;
         }
+        else
+        {
+            //ChampionListDto champions = JsonUtility.FromJson<ChampionListDto>(www.text);
+            var N = SimpleJSON.JSON.Parse(www.text);
 
-        GameWorld.Instance.Champions = champions;
+            ChampionListDto champions = new ChampionListDto();
+            champions.Type = N["type"];
+            champions.Version = N["version"];
+
+            SimpleJSON.JSONNode data = N["data"];
+            champions.Data = new ChampionDto[data.Count];
+            for (int i = 0; i < data.Count; i++)
+            {
+                champions.Data[i] = new ChampionDto();
+                champions.Data[i].Id = data[i]["id"].AsInt;
+                champions.Data[i].Key = data[i]["key"];
+                champions.Data[i].Name = data[i]["name"];
+                champions.Data[i].Title = data[i]["title"];
+                champions.Data[i].Tags = new string[data[i]["tags"].Count];
+                for (int j = 0; j < data[i]["tags"].Count; j++)
+                {
+                    champions.Data[i].Tags[j] = data[i]["tags"][j];
+                }
+            }
+
+            GameWorld.Instance.Champions = champions;
+        }
     }
 
     private IEnumerator SetupPlayers()

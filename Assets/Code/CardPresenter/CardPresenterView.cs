@@ -1,12 +1,13 @@
 using UnityEngine;
 using System.Collections;
-using System;
+using DG.Tweening;
 using UnityEngine.UI;
 
 public class CardPresenterView : MonoBehaviour {
     [HideInInspector]
     public CardPresenterController controller;
     public Text instructionText;
+    public CanvasGroup instructionCanvasGroup;
 
     private bool waitingForTarget = false;
     private Action currentAction;
@@ -54,10 +55,10 @@ public class CardPresenterView : MonoBehaviour {
 
         if (!string.IsNullOrEmpty(action.InstuctionMessage))
         {
-            instructionText.text = action.InstuctionMessage;
+            ShowInstruction(action);
         }
 
-        if(action.Type == CardActionType.SELF)
+        if (action.Type == CardActionType.SELF)
         {
             //done
             ActionComplete();
@@ -68,6 +69,12 @@ public class CardPresenterView : MonoBehaviour {
             HighlightTargets();
             waitingForTarget = true;
         }
+    }
+
+    private void ShowInstruction(Action action)
+    {
+        instructionText.text = string.Format(action.InstuctionMessage, action.CallerCard.name);
+        DOTween.To(() => instructionCanvasGroup.alpha, x => instructionCanvasGroup.alpha = x, 1, 1);
     }
 
     // Use this for initialization
@@ -129,6 +136,7 @@ public class CardPresenterView : MonoBehaviour {
         PotentialTarget = null;
         UnhighlightTargets();
         instructionText.text = "";
+        DOTween.To(() => instructionCanvasGroup.alpha, x => instructionCanvasGroup.alpha = x, 0, 1);
         waitingForTarget = false;
         controller.ActionComplete(currentAction);
     }

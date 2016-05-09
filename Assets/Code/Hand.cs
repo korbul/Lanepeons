@@ -17,9 +17,16 @@ public class Hand : MonoBehaviour {
     public PlayerSide side;
     public HandDirectionLayout directionLayout;
 
+    [ContextMenu("Init")]
+    public void Init()
+    {
+        cardsInHand = new List<Card>();
+        StartCoroutine(DrawCards(5));
+    }
+
     public void PlayNetworkCard(string data)
     {
-        NetworkAction action = JsonUtility.FromJson<NetworkAction>(data);
+        NetworkCardPlay action = JsonUtility.FromJson<NetworkCardPlay>(data);
 
         Card newCard = null;
         if (action.cardChampionId != -1)
@@ -73,6 +80,7 @@ public class Hand : MonoBehaviour {
 
     private void OnCardPlayComplete()
     {
+        enabled = false;
         Card tempCard = potentialCard;
 
         potentialCard.OnHoverExit();
@@ -84,24 +92,16 @@ public class Hand : MonoBehaviour {
         DrawCard();
 
         //test remote card
-        NetworkAction list = new NetworkAction();
+        NetworkCardPlay networkCard = new NetworkCardPlay();
         if (tempCard.GetType() == typeof(ChampionCard))
-            list.cardChampionId = ((ChampionCard)tempCard).championData.Id;
+            networkCard.cardChampionId = ((ChampionCard)tempCard).championData.Id;
         else
-            list.cardChampionId = -1;
-        list.variables = tempCard.onPlayActionChain.ExtractVariables();
-        SocketIOClient.Send(JsonUtility.ToJson(list));
+            networkCard.cardChampionId = -1;
+        networkCard.variables = tempCard.onPlayActionChain.ExtractVariables();
+        SocketIOClient.Send(JsonUtility.ToJson(networkCard));
     }
 
     #region UnityFunctions
-
-    private IEnumerator Start()
-    {
-        cardsInHand = new List<Card>();
-        yield return new WaitForSeconds(4);
-        StartCoroutine(DrawCards(5));
-    }
-
     private void Update()
     {
         if (cardPlayInProgress)

@@ -111,10 +111,3 @@ public struct RuntimeVariables
 {
     public string target;
 }
-
-[Serializable]
-public class NetworkAction
-{
-    public int cardChampionId;
-    public List<RuntimeVariables> variables;
-}
